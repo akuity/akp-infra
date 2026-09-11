@@ -138,10 +138,26 @@ After step 2:
 
 ## Step 3 — Workload clusters and agents (`03-clusters`)
 
-Put a kubeconfig for each cluster somewhere Terraform can read it (`.kubeconfigs/` in this repo is gitignored for exactly this), then:
+Put a kubeconfig for each cluster somewhere Terraform can read it (`.kubeconfigs/` in this repo is gitignored for exactly this).
+
+Don't have a cluster handy? `scripts/bootstrap-clusters.sh` creates one with k3d, kind, or minikube (auto-detected, in that order) and writes a standalone kubeconfig straight to `.kubeconfigs/`, without touching your real default kubeconfig or current-context:
 
 ```bash
 cd ../03-clusters
+./scripts/bootstrap-clusters.sh          # demo1 only, auto-detected provider
+./scripts/bootstrap-clusters.sh demo1 demo2   # both, opt-in
+./scripts/bootstrap-clusters.sh --help
+```
+
+Already have Kubernetes enabled in OrbStack? Skip the script — OrbStack is a single shared cluster, not something creatable per-name, so it can only stand in for one of demo1/demo2, not both. Extract it directly:
+
+```bash
+kubectl config view --raw --minify --context=orbstack > .kubeconfigs/demo1.yaml
+```
+
+Then:
+
+```bash
 cp terraform.tfvars.example terraform.tfvars   # set org_name + clusters map
 terraform init
 terraform apply
@@ -201,6 +217,8 @@ akp-infra/
 ├── 02-kargo/                   # Stack 2: Kargo instance + "kargo" cluster wiring
 ├── 03-clusters/                # Stack 3: workload clusters + agents
 │   ├── modules/cluster/        #   per-cluster module (Argo CD + Kargo agent)
+│   ├── scripts/
+│   │   └── bootstrap-clusters.sh  # create k3d/kind/minikube demo clusters + kubeconfigs
 │   └── templates/
 │       └── kustomization.yaml  #   agent CPU tuning for small clusters
 └── docs/
