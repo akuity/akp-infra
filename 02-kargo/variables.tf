@@ -16,9 +16,9 @@ variable "kargo_instance_name" {
 }
 
 variable "kargo_version" {
-  description = "Kargo version to deploy (Akuity build, e.g. v1.11.0-rc.1)"
+  description = "Kargo version to deploy (Akuity build, e.g. v1.11.2-ak.0)"
   type        = string
-  default     = "v1.11.0-rc.1"
+  default     = "v1.11.2-ak.0"
 }
 
 variable "admin_password" {
