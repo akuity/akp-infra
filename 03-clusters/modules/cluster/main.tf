@@ -83,7 +83,8 @@ resource "akp_cluster" "this" {
       # GOTCHA: on small/local clusters (k3d, kind, minikube) the default agent
       # CPU requests can exceed what's schedulable and leave pods Pending. The
       # kustomization patch shrinks argocd-application-controller and
-      # argocd-repo-server requests so the agent fits.
+      # argocd-repo-server requests, and runs a single repo-server replica, so
+      # the agent fits.
       kustomization = var.tune_agent_resources ? file(var.kustomization_path) : null
     }
   }

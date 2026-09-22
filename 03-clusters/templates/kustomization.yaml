@@ -1,6 +1,7 @@
-# Reduces CPU requests for the Akuity agent components so they schedule
-# comfortably on small/local clusters (k3d, kind, minikube). Applied to agent
-# manifests when a cluster sets tune_agent_resources = true.
+# Reduces CPU requests for the Akuity agent components, and pins
+# argocd-repo-server to one replica, so they schedule comfortably on
+# small/local clusters (k3d, kind, minikube). Applied to agent manifests when a
+# cluster sets tune_agent_resources = true.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 patches:
@@ -41,9 +42,9 @@ patches:
         name: argocd-repo-server
         namespace: akuity
       spec:
+        replicas: 1
         template:
           spec:
-            replicas: 1
             containers:
               - name: argocd-repo-server
                 resources:
