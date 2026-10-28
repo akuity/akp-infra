@@ -11,5 +11,6 @@
 # Cluster credentials
 .kubeconfigs/
 
-# Git worktrees used for isolated feature work
-.worktrees/
+# Local git worktrees
+.worktrees
+
